@@ -22,6 +22,14 @@ ZumoReflectanceSensorArray reflectanceSensors;
 ZumoMotors motors; 
 Pushbutton button(ZUMO_BUTTON); 
 int lastError = 0; 
+
+  bool sensor1; 
+bool sensor2; 
+bool sensor3; 
+bool sensor4; 
+bool sensor5; 
+bool sensor6; 
+ 
  
 // This is the maximum speed the motors will be allowed to turn. 
 // (400 lets the motors go at top speed; decrease to impose a speed limit) 
@@ -116,7 +124,7 @@ void setup()
   //motors.flipLeftMotor(true); 
  
   //motors.flipRightMotor(true); 
- 
+         
     
  
   pinMode(LED, HIGH); 
@@ -171,13 +179,20 @@ void backward() {
   motors.setSpeeds(-400, -400); 
 } 
  
-void left() { 
+void SlightLeft() { 
   motors.setSpeeds(400, -400); 
 } 
- 
-void right() { 
+
+void SlightRight() { 
 motors.setSpeeds(-400, 400); 
 } 
+
+void SharpRight(){
+  motors.setSpeeds(-400,400);
+}
+void SharpLeft(){
+  motors.setSpeeds(400,-400);
+}
  
 #define NUM_SENSORS 6 
  
@@ -200,14 +215,8 @@ void loop()
  * State selection 
  */ 
  
-  bool sensor1; 
-bool sensor2; 
-bool sensor3; 
-bool sensor4; 
-bool sensor5; 
-bool sensor6; 
- 
- sensor1 = sensor_values[0] >  QTR_THRESHOLD; 
+
+sensor1 = sensor_values[0] >  QTR_THRESHOLD; 
 sensor2 = sensor_values[1] >  QTR_THRESHOLD; 
 sensor3 = sensor_values[2] >  QTR_THRESHOLD; 
 sensor4 = sensor_values[3] >  QTR_THRESHOLD; 
@@ -222,28 +231,34 @@ switch(state)
     stopRobot(); 
     if(!sensor1 && !sensor2 && !sensor5 && !sensor6 && sensor3 && sensor4 )     // Move Forward 
     { 
-       state = 1; 
+       state = 1/*naar voren*/; 
     } 
-    if(sensor6) 
+    if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6) 
       { 
-        state = 2; 
+        state = 2/*naar achteren*/; 
       } 
-     if(sensor1) 
+     if(!sensor1 && sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6) 
       { 
-      state = 3; 
+      state = 3/*flauwe bocht naar links*/; 
       } 
-      if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6) 
+      if(!sensor1 && !sensor2 && sensor3 && sensor4 && sensor5 && !sensor6) 
       { 
-        state = 4; 
+        state = 4 /*flauwe bocht naar rechts*/; 
         } 
+      if(!sensor1 && !sensor2 && sensor3 && sensor4 && sensor5 && sensor6){
+        state = 5 /*scherpe bocht naar rechts*/;
+      }
+      if(sensor1 && sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6){
+        state = 6 /*scherpe bocht naar links*/; 
+      }
   break; 
   case 1 : 
     forward(); 
-    if(sensor_values[5] > QTR_THRESHOLD) 
+    if(sensor5 && sensor6) 
       { 
         state = 2; 
       } 
-     if(sensor_values[0] > QTR_THRESHOLD) 
+     if(sensor1)  
       { 
       state = 3; 
       } 
@@ -257,7 +272,7 @@ switch(state)
         } 
   break;   
   case 2 : 
-    left(); 
+    SlightLeft(); 
     if(sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD)     // Move Forward 
     { 
        state = 1; 
@@ -278,8 +293,8 @@ switch(state)
        
   break; 
   case 3 : 
-    right(); 
-    if(sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD)     // Move Forward 
+    SlightRight(); 
+    if(sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD ||sensor_values[2]> QTR_THRESHOLD ||sensor_values[3]> QTR_THRESHOLD )// Move Forward
     { 
        state = 1; 
     } 
