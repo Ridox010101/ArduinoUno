@@ -171,20 +171,28 @@ void forwardRobot()
  
  
 void forward() { 
-  //analogWrite(EA, 254); //speed 0 - 255 
-motors.setSpeeds(400, 400); 
+  motors.setSpeeds(400, 400); 
 } 
  
 void backward() { 
   motors.setSpeeds(-400, -400); 
 } 
  
+<<<<<<< Updated upstream
 void SlightLeft() { 
   motors.setSpeeds(400, -400); 
 } 
 
 void SlightRight() { 
 motors.setSpeeds(-400, 400); 
+=======
+void left() { 
+  motors.setSpeeds(400, 100); 
+} 
+ 
+void right() { 
+motors.setSpeeds(100, 400); 
+>>>>>>> Stashed changes
 } 
 
 void SharpRight(){
