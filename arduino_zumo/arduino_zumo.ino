@@ -134,14 +134,18 @@ void setup()
 
 
 
-
+bool sensor1;
+bool sensor2;
+bool sensor3;
+bool sensor4;
+bool sensor5;
+bool sensor6;
 
 
 
 void stopRobot()
 {
   motors.setSpeeds(0, 0);
-  Serial.write("stoprobot");
 }
 
 void forwardRobot() {
@@ -149,26 +153,33 @@ void forwardRobot() {
 motors.setSpeeds(400, 400);
 }
 
-void backward() {
+void backwardRobot() {
   motors.setSpeeds(-400, -400);
 }
 
-void left() {
+void leftRobot() {
   motors.setSpeeds(400, -400);
 }
 
-void slightleft() {
+void slightleftRobot() {
   motors.setSpeeds(400, 200);
 }
 
-void right() {
-motors.setSpeeds(-400, 400);
+void sharpleftRobot(){
+  motors.setSpeeds(400, -400);
 }
 
-void slightright() {
+void rightRobot() {
+  motors.setSpeeds(-400, 400);
+}
+
+void slightrightRobot() {
   motors.setSpeeds(200, 400);
 }
 
+void sharprightRobot(){
+  motors.setSpeeds(-400, 400);
+}
 #define NUM_SENSORS 6
 
 unsigned int sensor_values[NUM_SENSORS];
@@ -177,23 +188,40 @@ unsigned int sensor_values[NUM_SENSORS];
 
 void forward()
 {
-  if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6)
+  if(!sensor1 && !sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)
     {
        state = 1; //forward
     }  
 }
+
 void left()
 {
-  if(sensor1 && sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)
+  if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && sensor5 && sensor6)
     {
        state = 2; //left
     }
 }
 void right()
 {
-  if(!sensor1 && !sensor2 && sensor3 && sensor4 && sensor5 && sensor6)  
+  if(sensor1 && sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)  
   {
    state = 3; //right
+  }
+}
+void sharpRight(){
+  if(sensor1 && sensor2 && sensor3 && !sensor4 && !sensor5 && !sensor6){
+    state = 4;//sharp right
+  }
+}
+void sharpLeft(){
+  if(!sensor1 && !sensor2 && !sensor3 && sensor4 && sensor5 && sensor6){
+    state = 5; //sharp left
+  }
+}
+
+void stop(){
+  if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6){
+    state = 6; //stop
   }
 }
 void loop()
@@ -211,14 +239,9 @@ void loop()
  * State selection
  */
 
-  bool sensor1;
-bool sensor2;
-bool sensor3;
-bool sensor4;
-bool sensor5;
-bool sensor6;
 
- sensor1 = sensor_values[0] >  QTR_THRESHOLD;
+
+sensor1 = sensor_values[0] >  QTR_THRESHOLD;
 sensor2 = sensor_values[1] >  QTR_THRESHOLD;
 sensor3 = sensor_values[2] >  QTR_THRESHOLD;
 sensor4 = sensor_values[3] >  QTR_THRESHOLD;
@@ -233,96 +256,67 @@ switch(state)
     stopRobot();
     forward();
     left();
+    sharpLeft();
     right();
-    slightLeft();
-    slightRight();
-    break;
+    sharpRight();
+    stop();
+  break;
   
   case 1 :
     forwardRobot();
-    stopRobot();
-    leftRobot();
-    rightRobot();
-    slightLeft();
-    slightRight();
-   
-     
-  break;  
-  case 2 :
     left();
-    if(!sensor1 && !sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)    
-    {
-       state = 1;
-    }
-    if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD && sensor_values[2] < QTR_THRESHOLD && sensor_values[3] < QTR_THRESHOLD && sensor_values[4] < QTR_THRESHOLD && sensor_values[5] < QTR_THRESHOLD)
-      {
-        state = 0;
-        }
-
-        if(sensor_values[0] > QTR_THRESHOLD)
-      {
-      state = 3;
-      }
-       if(sensor_values[4] > QTR_THRESHOLD && sensor_values[5] > QTR_THRESHOLD)
-      {
-      state = 4;
-      }
-          if(!sensor1 && !sensor2 && !sensor3 && sensor4 && sensor5 && sensor6 )
-      {
-      state = 5;
-      }
-      
-  break;
-  case 3 :
+    sharpLeft();
     right();
-    forward();
-    if(!sensor1 && !sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)    
-    {
-       state = 1; //forward
-    }
-    if(sensor1 && sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)
-    {
-       state = 2; //left
-    }
-    if(sensor1 && sensor2 && sensor3 && !sensor4 && !sensor5 && !sensor6)
-    {
-       state = 4; //slight left
-    }
-    if(!sensor1 && !sensor2 && !sensor3 && sensor4 && sensor5 && sensor6)
-    {
-       state = 5; //slight right
-    }
-    break;
-    
-  case 4 :
-    slightleft();
-    if(!sensor1 && !sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)    
-    {
-       state = 1;
-    }
-    if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD && sensor_values[2] < QTR_THRESHOLD && sensor_values[3] < QTR_THRESHOLD && sensor_values[4] < QTR_THRESHOLD && sensor_values[5] < QTR_THRESHOLD)
-      {
-        state = 0;
-        }
-
-        if(sensor_values[0] > QTR_THRESHOLD)
-      {
-      state = 3;
-      }
-      if(sensor_values[5] > QTR_THRESHOLD)
-      {
-        state = 2;
-      }
-         if(!sensor1 && !sensor2 && !sensor3 && sensor4 && sensor5 &&sensor6 )
-      {
-      state = 5;
-      }
-      
-     
-      
+    sharpRight();
+    stop();  
   break;
-    case 5 :
-    slightright();
+    
+  case 2 :
+    leftRobot();
+    forward();
+    sharpLeft();
+    right();
+    sharpRight();
+    stop();
+  break;
+  
+  case 3 :
+    rightRobot();
+    forward();
+    left();
+    sharpLeft();
+    sharpRight();
+    stop();
+  break; 
+  
+  case 4 :
+    sharprightRobot();
+    forward();
+    left();
+    sharpLeft();
+    right();
+    stop();
+  break;
+
+  case 5 :
+    forward();
+    left();
+    sharpleftRobot();
+    right();
+    sharpRight();
+    stop();
+  break;
+
+  case 6 :
+    forward();
+    left();
+    sharpLeft();
+    right();
+    stopRobot();
+  break;
+  
+  case 7 :
+    slightrightRobot();
     if(!sensor1 && !sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)    
     {
        state = 1;
@@ -342,10 +336,7 @@ switch(state)
     if(sensor_values[4] > QTR_THRESHOLD && sensor_values[5] > QTR_THRESHOLD)
       {
       state = 4;
-      }
-            
-     
-      
+      }    
   break;
   
   default:
