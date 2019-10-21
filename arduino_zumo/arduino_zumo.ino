@@ -264,6 +264,15 @@ switch(state)
   
   case 1 :
     forwardRobot();
+    stopthisshit();
+    left();
+    right();
+    slightLeft();
+    slightRight();
+   
+     
+  break;  
+  case 2 :
     left();
     sharpLeft();
     right();
