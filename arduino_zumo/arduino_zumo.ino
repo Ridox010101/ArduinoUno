@@ -147,25 +147,12 @@ void stopRobot()
 {
   motors.setSpeeds(0, 0);
 }
-
 void forwardRobot() {
   //analogWrite(EA, 254); //speed 0 - 255
 motors.setSpeeds(400, 400);
 }
 
-void backwardRobot() {
-  motors.setSpeeds(-400, -400);
-}
-
 void leftRobot() {
-  motors.setSpeeds(400, -400);
-}
-
-void slightleftRobot() {
-  motors.setSpeeds(400, 200);
-}
-
-void sharpleftRobot(){
   motors.setSpeeds(400, -400);
 }
 
@@ -173,12 +160,12 @@ void rightRobot() {
   motors.setSpeeds(-400, 400);
 }
 
-void slightrightRobot() {
-  motors.setSpeeds(200, 400);
-}
-
 void sharprightRobot(){
   motors.setSpeeds(-400, 400);
+}
+
+void sharpleftRobot(){
+  motors.setSpeeds(400, -400);
 }
 #define NUM_SENSORS 6
 
@@ -219,8 +206,8 @@ void sharpLeft(){
   }
 }
 
-void stop(){
-  if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6){
+void stopthisfuckingRobot(){
+  if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6){
     state = 6; //stop
   }
 }
@@ -254,98 +241,63 @@ switch(state)
 {
   case 0 :
     stopRobot();
+    
     forward();
     left();
     sharpLeft();
     right();
     sharpRight();
-    stop();
   break;
   
   case 1 :
     forwardRobot();
-    stopthisshit();
-    left();
-    right();
-    slightLeft();
-    slightRight();
-   
-     
-  break;  
-  case 2 :
+
+    stopthisfuckingRobot();
     left();
     sharpLeft();
     right();
     sharpRight();
-    stop();  
-  break;
-    
+  break;  
+  
   case 2 :
     leftRobot();
+    
     forward();
+    stopthisfuckingRobot();
     sharpLeft();
     right();
     sharpRight();
-    stop();
   break;
-  
+
+     
   case 3 :
     rightRobot();
+    
     forward();
     left();
     sharpLeft();
     sharpRight();
-    stop();
+    stopthisfuckingRobot();
   break; 
   
   case 4 :
     sharprightRobot();
+    
     forward();
     left();
     sharpLeft();
     right();
-    stop();
+    stopthisfuckingRobot();
   break;
 
   case 5 :
+    sharpleftRobot();
+
     forward();
     left();
-    sharpleftRobot();
     right();
     sharpRight();
-    stop();
-  break;
-
-  case 6 :
-    forward();
-    left();
-    sharpLeft();
-    right();
-    stopRobot();
-  break;
-  
-  case 7 :
-    slightrightRobot();
-    if(!sensor1 && !sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)    
-    {
-       state = 1;
-    }
-    if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD && sensor_values[2] < QTR_THRESHOLD && sensor_values[3] < QTR_THRESHOLD && sensor_values[4] < QTR_THRESHOLD && sensor_values[5] < QTR_THRESHOLD)
-      {
-        state = 0;
-      }
-    if(sensor_values[0] > QTR_THRESHOLD)
-      {
-      state = 3;
-      }
-    if(sensor_values[5] > QTR_THRESHOLD)
-      {
-        state = 2;
-      }
-    if(sensor_values[4] > QTR_THRESHOLD && sensor_values[5] > QTR_THRESHOLD)
-      {
-      state = 4;
-      }    
+    stopthisfuckingRobot();      
   break;
   
   default:
