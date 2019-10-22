@@ -1,5 +1,19 @@
 #include <ZumoShield.h>
 
+/*
+ * Demo line-following code for the Pololu Zumo Robot
+ *
+ * This code will follow a black line on a white background, using a
+ * PID-based algorithm.  It works decently on courses with smooth, 6"
+ * radius curves and has been tested with Zumos using 30:1 HP and
+ * 75:1 HP motors.  Modifications might be required for it to work
+ * well on different courses or with different motors.
+ *
+ * https://www.pololu.com/catalog/product/2506
+ * https://www.pololu.com
+ * https://forum.pololu.com
+ */
+
 #include <Wire.h>
 #include <ZumoShield.h>
 
@@ -191,8 +205,7 @@ void sharpLeft(){
     state = 5; //sharp left
   }
 }
-
-void stopthisfuckingRobot(){
+void stopthisRobot(){
   if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6){
     state = 6; //stop
   }
@@ -238,7 +251,7 @@ switch(state)
   case 1 :
     forwardRobot();
 
-    stopthisfuckingRobot();
+    stopthisRobot();
     left();
     sharpLeft();
     right();
@@ -249,7 +262,7 @@ switch(state)
     leftRobot();
     
     forward();
-    stopthisfuckingRobot();
+    stopthisRobot();
     sharpLeft();
     right();
     sharpRight();
@@ -263,7 +276,7 @@ switch(state)
     left();
     sharpLeft();
     sharpRight();
-    stopthisfuckingRobot();
+    stopthisRobot();
   break; 
   
   case 4 :
@@ -273,7 +286,7 @@ switch(state)
     left();
     sharpLeft();
     right();
-    stopthisfuckingRobot();
+    stopthisRobot();
   break;
 
   case 5 :
@@ -283,7 +296,7 @@ switch(state)
     left();
     right();
     sharpRight();
-    stopthisfuckingRobot();      
+    stopthisRobot();      
   break;
   
   default:
