@@ -89,7 +89,7 @@ bool sensor6;
  
 void stopRobot() 
 { 
-  motors.setSpeeds(0, 0); 
+  motors.setSpeeds(0, 0);
 } 
 void forwardRobot() { 
   motors.setSpeeds(250, 225); 
@@ -151,9 +151,12 @@ void sharpLeft(){
  
 void stopthisRobot(){ 
   if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6){ 
-    state = 6; //stop 
+    state = 0; //stop 
+    delay(1000);
+    state = 1;
   } 
 } 
+
 void loop() 
 { 
  
@@ -188,7 +191,7 @@ switch(state)
     forward(); 
     left(); 
     sharpLeft(); 
-    right(); 
+    right();
     sharpRight(); 
   break; 
    
@@ -242,7 +245,7 @@ switch(state)
     sharpRight(); 
     stopthisRobot();       
   break; 
-   
+
   default: 
   state = 0; 
   break;   
