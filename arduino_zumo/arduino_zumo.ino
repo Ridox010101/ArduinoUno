@@ -105,34 +105,6 @@ void setup()
 
 
 
- 
-
-/*void setup()
-
-{
-
-  // uncomment if necessary to correct motor directions
-
-  //motors.flipLeftMotor(true);
-
-  //motors.flipRightMotor(true);
-
-   
-
-  pinMode(LED, HIGH);
-
-   
-
-  waitForButtonAndCountDown();
-
-  Serial.begin(9600);
-
-  
-
-}
-*/
-
-
 
 bool sensor1;
 bool sensor2;
@@ -167,6 +139,7 @@ void sharprightRobot(){
 void sharpleftRobot(){
   motors.setSpeeds(400, -400);
 }
+
 #define NUM_SENSORS 6
 
 unsigned int sensor_values[NUM_SENSORS];
@@ -183,25 +156,25 @@ void forward()
 
 void left()
 {
-  if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && sensor5 && sensor6)
+  if(!sensor1 && !sensor2 && !sensor3 && sensor4 && sensor5 && sensor6)
     {
        state = 2; //left
     }
 }
 void right()
 {
-  if(sensor1 && sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)  
+  if(sensor1 && sensor2 && sensor3 && !sensor4 && !sensor5 && !sensor6)  
   {
-   state = 3; //right
+    state = 3;
   }
 }
 void sharpRight(){
-  if(sensor1 && sensor2 && sensor3 && !sensor4 && !sensor5 && !sensor6){
+  if(sensor1 && sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6){
     state = 4;//sharp right
   }
 }
 void sharpLeft(){
-  if(!sensor1 && !sensor2 && !sensor3 && sensor4 && sensor5 && sensor6){
+  if(!sensor1 && !sensor2 && sensor3 && sensor4 && sensor5 && sensor6){
     state = 5; //sharp left
   }
 }
@@ -210,16 +183,37 @@ void stopthisRobot(){
     state = 6; //stop
   }
 }
+void pitstop(){
+int count = 0;
+  
+    if (count < 1)
+      {
+      if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6)
+          {
+          state = 6;
+          count = count++;
+          delay(1000);
+          }
+      }  
+  
+  
+  
+  
+  
+}
+
 void loop()
-{
+  {
+   
+  
 
 
-//  readSensors();
-//  actions();
+  //readSensors();
+  //actions();
   reflectanceSensors.read(sensor_values);
   //button.waitForButton();
   
-
+  
 
 /*
  * State selection
@@ -234,7 +228,7 @@ sensor4 = sensor_values[3] >  QTR_THRESHOLD;
 sensor5 = sensor_values[4] >  QTR_THRESHOLD;
 sensor6 = sensor_values[5] >  QTR_THRESHOLD;
 
-
+  
 
 switch(state)
 {
@@ -251,21 +245,22 @@ switch(state)
   case 1 :
     forwardRobot();
 
-    stopthisRobot();
+    
     left();
     sharpLeft();
     right();
     sharpRight();
+    stopthisRobot();
   break;  
   
   case 2 :
     leftRobot();
     
     forward();
-    stopthisRobot();
     sharpLeft();
     right();
     sharpRight();
+    stopthisRobot();
   break;
 
      
@@ -298,118 +293,20 @@ switch(state)
     sharpRight();
     stopthisRobot();      
   break;
+
+    case 6 :  
+    pitstop();
+
+    sharpleftRobot();
+    forward();
+    left();
+    right();
+    sharpRight();
+    stopthisRobot();      
+  break;
   
   default:
   state = 0;
   break;  
 }
-}
- 
-
-/*switch(state)
-{
-case 0 :
-
-    stopRobot();
-    if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD &&sensor_values[4] < QTR_THRESHOLD &&sensor_values[5] < QTR_THRESHOLD && sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD )     // Move Forward
-    {
-       state = 1;
-    }
-    if(sensor_values[5] > QTR_THRESHOLD)
-      {
-        state = 2;
-      }
-     if(sensor_values[0] > QTR_THRESHOLD)
-      {
-      state = 3;
-      }
-     
-  break;
-
- 
-
-  
-  case 1 :
-    forward();
-    if(sensor_values[0] > QTR_THRESHOLD && sensor_values[1] > QTR_THRESHOLD && sensor_values[4] > QTR_THRESHOLD &&sensor_values[5] > QTR_THRESHOLD && sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD )     // Move Forward
-    {
-       state = 0;
-    }
-    if(sensor_values[5] > QTR_THRESHOLD)
-      {
-        state = 2;
-      }
-     if(sensor_values[0] > QTR_THRESHOLD)
-      {
-      state = 3;
-      }
-    
-  break;  
-  case 2 :
-    left();
-   if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD &&sensor_values[4] < QTR_THRESHOLD &&sensor_values[5] < QTR_THRESHOLD && sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD )     // Move Forward
-    {
-       state = 1;
-    }
-   if(sensor_values[0] > QTR_THRESHOLD && sensor_values[1] > QTR_THRESHOLD && sensor_values[4] > QTR_THRESHOLD &&sensor_values[5] > QTR_THRESHOLD && sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD )     // Move Forward
-    {
-       state = 0;
-    }
-     if(sensor_values[0] > QTR_THRESHOLD)
-      {
-      state = 3;
-      }
-     
-    
-  break;
-  case 3 :
-    right();
-     if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD &&sensor_values[4] < QTR_THRESHOLD &&sensor_values[5] < QTR_THRESHOLD && sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD )     // Move Forward
-    {
-       state = 1;
-    }
-    if(sensor_values[5] > QTR_THRESHOLD)
-      {
-        state = 2;
-      }
-     if(sensor_values[0] > QTR_THRESHOLD && sensor_values[1] > QTR_THRESHOLD && sensor_values[4] > QTR_THRESHOLD &&sensor_values[5] > QTR_THRESHOLD && sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD )     // Move Forward
-    {
-       state = 0;
-    }
-    
-  break;
-  default:
-  state=0;
-  break;  
-}
-  
-}*/
-
-
-
-
-
-
-
-/*
-
-  
-  if(sensor[2] && sensor[3]))     // Move Forward
-  {
-    motors.setSpeed(MAX_SPEED);
   }
-  
-  if(!(sensor[1]) && sensor[4])     // Turn right
-  {
-    
-  }
-  
-  if(sensor[1] && !(sensor[4]))     // turn left
-  {
-    
-  }
-  
-  if(!(sensors[6]))     // stop
-  {
-    motors.setSpeed(0);
-  }*/
